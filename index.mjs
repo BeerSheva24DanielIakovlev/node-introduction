@@ -1,8 +1,7 @@
 import logger from './logger.mjs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-console.log('from module', process.env.LEVEL);
+import fs from 'node:fs';
 
+const data = fs.readFileSync('./index.mjs');
+logger.info(data);
 
-logger.info(logger.level); //access __filename from ECS module
-
+fs.writeFileSync('./file.txt', ["kuku", "kukareku","hjgasjhsa", "Hello World!"].join('\n'));

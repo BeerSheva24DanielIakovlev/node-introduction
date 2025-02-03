@@ -1,5 +1,7 @@
-import winston, { log } from 'winston';
+import winston from 'winston';
 console.log('from index.mjs', process.env.LEVEL);
+
+
 
 const logger = winston.createLogger({
     level:process.env.LEVEL ?? 'info',
@@ -8,4 +10,5 @@ const logger = winston.createLogger({
         new winston.transports.Console
     ]
 });
-export default logger;1
+
+export default logger;
