@@ -1,16 +1,11 @@
 import logger from './logger.mjs';
-import fs from 'node:fs';
+import { readFile, writeFile } from 'node:fs/promises';
 
-const data = fs.readFileSync('./file.txt', 'base64', (err, data) => {
-    if (err) {
-        logger.error(err);
-    } else {
-        console.log(data);
-        
-    }
-});
+const data = await fs.readFileSync('./file.txt', 'utf-16le');
 console.log(data);
 
 
-fs.writeFileSync('./file.txt', ["kuku", "kukareku","hjgasjhsa", "Hello World!"].join('\n'),
-  'utf-16le', () => logger.debug('file saved in utf-16le format'));
+writeFile('./file.txt', ["kuku", "kukareku","hjgasjhsa", "Hello World!"].join('\n'), 'utf-16le');
+logger.info("function finished");
+
+//плохие новости... этот и пару предыдущих коммитов я не понял от слова вообще...
