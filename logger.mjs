@@ -1,14 +1,22 @@
-import winston from 'winston';
-console.log('from index.mjs', process.env.LEVEL);
+import winston, { Logger } from 'winston';
+import {EventEmiter} from 'node:events';
+ 
+class logger extends EventEmiter {
+    #logger;
+    constructor() {
+        this.#logger = winston.createLogger({
+            level:process.env.LEVEL ?? 'info',
+            format: winston.format.simple(),
+            transports: [new winston.transports.Console]
+        });
+    };
 
+    log(level, message) {
+        this.#logger.log(level, message);
+        this.emit(level, message);
+        this.emit('message', {level, message});
+    };
+};
 
-
-const logger = winston.createLogger({
-    level:process.env.LEVEL ?? 'info',
-    format: winston.format.simple(),
-    transports: [
-        new winston.transports.Console
-    ]
-});
-
+const logger = new Logger();
 export default logger;
