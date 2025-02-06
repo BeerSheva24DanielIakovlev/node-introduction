@@ -1,22 +1,34 @@
-import winston, { Logger } from 'winston';
-import {EventEmiter} from 'node:events';
- 
-class logger extends EventEmiter {
+import winston from 'winston';
+import { EventEmitter } from 'node:events';
+
+class Logger extends EventEmitter {
     #logger;
+
     constructor() {
+        super();
         this.#logger = winston.createLogger({
-            level:process.env.LEVEL ?? 'info',
-            format: winston.format.simple(),
-            transports: [new winston.transports.Console]
+            level: process.env.LEVEL ?? 'info',
+            format: winston.format.combine(
+                winston.format.timestamp(),
+                winston.format.json()
+            ),
+            transports: [
+                new winston.transports.Console(),
+                new winston.transports.File({ filename: 'logs/app.log' })
+            ]
         });
-    };
+
+        this.on('error', (message) => {
+            console.error(`Logger caught an error: ${message}`);
+        });
+    }
 
     log(level, message) {
-        this.#logger.log(level, message);
+        this.#logger.log({ level, message });
         this.emit(level, message);
-        this.emit('message', {level, message});
-    };
-};
+        this.emit('message', { level, message });
+    }
+}
 
-const logger = new Logger();
-export default logger;
+const loggerInstance = new Logger();
+export default loggerInstance;
